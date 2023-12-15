@@ -1,40 +1,66 @@
-
-import helmet from 'helmet';
-import express, { NextFunction, Request, Response } from 'express';
-import compression from 'compression';
 import cors from "cors";
-import env, { validateEnvironmentVariables } from './env.js';
-import router from './router.js';
+import morgan from "morgan";
+import helmet from "helmet";
+import compression from "compression";
+import express, { NextFunction, Request, Response } from "express";
 
+import router from "./router.js";
+import database from "./database.js";
+import logger from "./core/logger.js";
+import env, { isDev, validateEnvironmentVariables } from "./env.js";
+
+// Ensure that all required environment variables are present
 validateEnvironmentVariables();
 
+// Connect to MongoDB
+database;
+
+// Create Express server
 const app = express();
 
-app.use(helmet())
-app.disable('x-powered-by')
+// Configure HTTP request logger middleware
+app.use(
+  morgan("combined", {
+    stream: { write: (message) => logger.http(message) },
+    skip: () => isDev,
+  })
+);
 
+// Use helmet to secure HTTP headers
+// https://expressjs.com/en/advanced/best-practice-security.html#use-helmet
+app.use(helmet());
+
+// Disable the `X-Powered-By` HTTP header for security
+// https://expressjs.com/en/advanced/best-practice-security.html#reduce-fingerprinting
+app.disable("x-powered-by");
+
+// Use compression middleware to compress HTTP responses
+// https://stackoverflow.com/a/58813283/14174934
 app.use(compression());
 
+// Enable CORS
+// https://stackoverflow.com/a/61988727/14174934
 app.use(cors());
 
+// Parse JSON and url-encoded query
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use('/', router());
+// Mount API routes
+app.use("/", router());
 
-// last app.use calls right before app.listen():
-
-// TODO: custom 404
+// TODO: Custom 404 handler
 app.use((req: Request, res: Response, next: NextFunction) => {
-    res.status(404).send("Sorry can't find that!")
-})
+  res.status(404).json({ message: "Not found" });
+});
 
-// TODO: custom error handler
+// TODO: Custom error handler
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-    console.error(err.stack)
-    res.status(500).send('Something broke!')
-})
+  logger.error(err.stack);
+  res.status(500).json({ message: "Something broke on our end" });
+});
 
+// Start Express server
 app.listen(env.PORT, () => {
-    console.log('Running on port ' + env.PORT);
+  logger.info(`Server is listening on port ${env.PORT}`);
 });

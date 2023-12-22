@@ -8,8 +8,8 @@
     "build": "rimraf dist && npx tsc",
     "prestart": "npm run build",
     "start": "cross-env NODE_ENV=production node --env-file=.env dist/index.js",
-    "preserve": "npm run build",
-    "serve": "concurrently \"npx tsc -w\" \"nodemon\""
+    "predev": "npm run build",
+    "dev": "concurrently \"npx tsc -w\" \"nodemon\""
   },
   "keywords": [],
   "author": "",

@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 
-import ExampleModel from "../../data/models/example.model.js";
+import ExampleModel from "../../data/models/example.model";
 
 /**
  * An example handler that creates an example document in the database

@@ -1,5 +1,6 @@
-import env, { isDev } from "../env.js";
 import winston from "winston";
+
+import env, { isDev } from "../env";
 
 const levels = {
   error: 0,

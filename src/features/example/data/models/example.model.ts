@@ -1,11 +1,16 @@
 import mongoose, { Schema } from "mongoose";
 
-import ExampleType from "../types/example.type.js";
+import ExampleType from "../types/example.type";
 
-const exampleSchema: Schema = new Schema<ExampleType>({
+export const exampleSchema: Schema = new Schema<ExampleType>({
   message: { type: String, required: true },
 });
 
-const ExampleModel = mongoose.model<ExampleType>("Example", exampleSchema);
+export const exampleModelName = "Example";
+
+const ExampleModel = mongoose.model<ExampleType>(
+  exampleModelName,
+  exampleSchema
+);
 
 export default ExampleModel;

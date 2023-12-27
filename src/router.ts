@@ -1,5 +1,6 @@
 import { Router } from "express";
-import exampleRoutes from "./features/example/example.routes.js";
+
+import exampleRoutes from "./features/example/example.routes";
 
 const router: Router = Router();
 

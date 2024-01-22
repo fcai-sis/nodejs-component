@@ -1,8 +1,8 @@
-import app from "../src/app";
+import mongoose from "mongoose";
 import supertest from "supertest";
 
+import app from "../src/app";
 import * as database from "./database";
-import mongoose from "mongoose";
 import { exampleModelName } from "../src/features/example/data/models/example.model";
 
 const request = supertest(app);

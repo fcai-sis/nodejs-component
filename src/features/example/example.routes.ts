@@ -1,6 +1,6 @@
 import { Router } from "express";
 
-import asyncHandler from "../../core/asyncHandler";
+import { asyncHandler } from "@fcai-sis/shared-utilities";
 import exampleHandler from "./logic/handlers/example.handler";
 import validateExampleMessageMiddleware from "./logic/middlewares/validateExampleMessage.middleware";
 
